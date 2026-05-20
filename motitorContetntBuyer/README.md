@@ -8,13 +8,13 @@
 | --- | --- |
 | 런타임 | Python |
 | 진입점 | `lambda_function.lambda_handler` |
-| 트리거 | EventBridge 스케줄 또는 Zapier 호출 |
+| 트리거 | EventBridge 정기 스케줄 |
 | 요청 body | 사용하지 않음 |
 | 외부 서비스 | IMWEB API, Zapier Webhook, DynamoDB |
 
 ## 역할
 
-이 Lambda는 주기적으로 IMWEB 주문을 조회해 아래 조건을 만족하는 주문을 처리합니다.
+이 Lambda는 EventBridge 정기 스케줄에 따라 주기적으로 실행되며, IMWEB 주문을 조회해 아래 조건을 만족하는 주문을 처리합니다.
 
 - 주문 상태: `PURCHASE_CONFIRMATION`
 - 주문 범위: 실행 시점 기준 최근 2일
@@ -25,14 +25,15 @@
 
 ## 처리 흐름
 
-1. 환경변수의 IMWEB API key/secret으로 IMWEB `access_token`을 발급합니다.
-2. 최근 2일간의 `PURCHASE_CONFIRMATION` 주문을 조회합니다.
-3. 다운로드 배송 주문만 필터링합니다.
-4. `PROWOrderContentHistory`에서 `order_no` 기준으로 중복 처리 여부를 확인합니다.
-5. 주문 상세 API를 호출해 상품명, 옵션, 커스텀코드, 주문자 전화번호를 읽습니다.
-6. 전화번호로 `PROWDiscordUser`의 `phone-index`를 조회해 Discord 가입 여부와 `userID`를 확인합니다.
-7. 상품별 payload를 Zapier Webhook으로 전송합니다.
-8. 주문 처리 기록을 `PROWOrderContentHistory`에 저장합니다.
+1. EventBridge 정기 스케줄이 Lambda를 실행합니다.
+2. 환경변수의 IMWEB API key/secret으로 IMWEB `access_token`을 발급합니다.
+3. 최근 2일간의 `PURCHASE_CONFIRMATION` 주문을 조회합니다.
+4. 다운로드 배송 주문만 필터링합니다.
+5. `PROWOrderContentHistory`에서 `order_no` 기준으로 중복 처리 여부를 확인합니다.
+6. 주문 상세 API를 호출해 상품명, 옵션, 커스텀코드, 주문자 전화번호를 읽습니다.
+7. 전화번호로 `PROWDiscordUser`의 `phone-index`를 조회해 Discord 가입 여부와 `userID`를 확인합니다.
+8. 상품별 payload를 Zapier Webhook으로 전송합니다.
+9. 주문 처리 기록을 `PROWOrderContentHistory`에 저장합니다.
 
 현재 구현은 Webhook 전송 실패 여부와 관계없이 주문 단위 처리 완료 기록을 진행합니다. 이 동작을 바꾸려면 `send_webhook()` 반환값을 확인해 모든 상품 전송 성공 시에만 기록하도록 코드 수정이 필요합니다.
 
@@ -89,6 +90,18 @@
 
 `prod_custom_code == "BEPL-MEMBERSHIP-365"`이면 Zapier payload의 `is_subscription` 값은 `구독`입니다. 그 외 상품은 현재 코드상 `'` 값이 들어갑니다.
 
+## 실행 방식
+
+이 함수는 요청 body를 사용하지 않습니다. 시간마다 실행되도록 EventBridge 규칙 또는 EventBridge Scheduler에서 Lambda target으로 연결합니다.
+
+예시 스케줄 표현:
+
+```text
+rate(1 hour)
+```
+
+실제 운영 주기는 AWS 콘솔의 EventBridge 설정을 기준으로 확인합니다.
+
 ## 성공 응답
 
 ```json
@@ -139,4 +152,3 @@ AWS Lambda 런타임에 포함된 `boto3`는 별도로 패키징하지 않습니
 | --- | --- |
 | 2025-04-14 | 다운로드 주문 추적 및 Zapier 연동 구조 구축 |
 | 2026-05-20 | README.md 형식 통일, 최근 2일 조회/DynamoDB/Discord/구독 로직 반영 |
-

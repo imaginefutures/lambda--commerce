@@ -8,7 +8,7 @@
 | --- | --- | --- | --- | --- |
 | `GenerateClientSecretSign` | 네이버 커머스 API `access_token` 발급 | Node.js | `index.handler` | `naver-commerce-api` |
 | `naver-commerce-api` | n8n에서 네이버 커머스 API를 안전하게 호출하는 어댑터 | Python | `lambda_function.lambda_handler` | n8n |
-| `motitorContetntBuyer` | 아임웹 다운로드 상품 구매확정 주문을 Zapier로 전달 | Python | `lambda_function.lambda_handler` | EventBridge 또는 Zapier |
+| `motitorContetntBuyer` | 아임웹 다운로드 상품 구매확정 주문을 Zapier로 전달 | Python | `lambda_function.lambda_handler` | EventBridge 정기 스케줄 |
 
 `motitorContetntBuyer` 폴더명은 기존 배포명과의 호환을 위해 그대로 둡니다.
 
@@ -22,7 +22,7 @@ n8n
   -> naver-commerce-api
   -> n8n
 
-EventBridge 또는 Zapier
+EventBridge 정기 스케줄
   -> motitorContetntBuyer
   -> IMWEB API
   -> DynamoDB
