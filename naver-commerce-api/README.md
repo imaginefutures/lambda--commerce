@@ -22,10 +22,8 @@
 | --- | --- | --- |
 | `README.md` | n8n 사용자, 운영 담당자 | Lambda가 무엇인지 이해하고, n8n에서 호출하고, 실패 알림을 구성합니다. |
 | `OPERATIONS.md` | n8n 사용자, 개발자 | 어떤 operation을 써야 하는지 고르고, operation별 payload와 endpoint를 확인합니다. |
-| `DEVELOPMENT_PLAN.md` | 개발자 | 구현할 기능, 모듈 구조, 개발 순서, 테스트 기준을 확인합니다. |
 
 처음 사용하는 사람은 이 문서를 먼저 읽고, 실제 요청 payload를 만들 때 [OPERATIONS.md](./OPERATIONS.md)를 확인합니다.
-개발을 진행할 때는 [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)를 기준으로 작업 범위와 완료 기준을 확인합니다.
 
 ## 목적
 
@@ -508,3 +506,4 @@ Lambda는 JSON 형태의 구조화 로그를 남깁니다.
 | --- | --- |
 | 2026-05-20 | README.md 형식 보완, operation 빠른 선택/응답 예시/배포 섹션 정리 |
 | 2026-05-20 | Lambda 명칭을 폴더명 기준 `naver-commerce-api`로 통일 |
+| 2026-05-20 | 개발 계획 문서 제거에 맞춰 문서 구성 정리 |
