@@ -1,0 +1,38 @@
+.DS_Store
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Build outputs
+dist/
+.build/
+*.zip
+*.tar.gz
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+env/
+motitorContetntBuyer/bin/
+motitorContetntBuyer/certifi/
+motitorContetntBuyer/certifi-*.dist-info/
+motitorContetntBuyer/charset_normalizer/
+motitorContetntBuyer/charset_normalizer-*.dist-info/
+motitorContetntBuyer/idna/
+motitorContetntBuyer/idna-*.dist-info/
+motitorContetntBuyer/requests/
+motitorContetntBuyer/requests-*.dist-info/
+motitorContetntBuyer/urllib3/
+motitorContetntBuyer/urllib3-*.dist-info/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
